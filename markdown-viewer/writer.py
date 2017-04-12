@@ -26,7 +26,7 @@ class TextStyleWriter:
 
     def write_text(self, text):
         if isinstance(text, str):
-            self.output.write(text.encode())
+            self.output.write(text)
         elif isinstance(text, Text):
             if text.style is not None:
                 self.push_style(text.style)
@@ -64,7 +64,7 @@ class DisplayWriter(TextStyleWriter):
 
         for char in text:
             if char == '\n':
-                self.output.write(buf.encode())
+                self.output.write(buf)
                 buf = ''
                 self.new_line()
                 continue
@@ -81,15 +81,15 @@ class DisplayWriter(TextStyleWriter):
                     # If we can't find a break point, then just break where we are
                     # The last char is the char that went over the limit,
                     # so put it on the next line
-                    self.output.write(buf[:-1].encode())
+                    self.output.write(buf[:-1])
                     self.new_line()
                     buf = char
                 else:
-                    self.output.write(buf[:break_index].encode())
+                    self.output.write(buf[:break_index])
                     self.new_line()
                     buf = buf[break_index + 1:]
 
-        self.output.write(buf.encode())
+        self.output.write(buf)
 
     def get_break_index(self, text):
         break_match = self.break_regex.search(text[::-1])
@@ -100,5 +100,5 @@ class DisplayWriter(TextStyleWriter):
             return len(text) - break_match.start() - 1
 
     def new_line(self):
-        self.output.write('\n'.encode())
+        self.output.write('\n')
         self.chars_on_line = 0

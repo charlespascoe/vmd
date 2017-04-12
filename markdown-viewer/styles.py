@@ -3,7 +3,7 @@ class Style:
         raise NotImplemented()
 
     def write_escape_code(self, code, output):
-        output.write('\x1b[{}m'.format(code).encode('utf8'))
+        output.write('\x1b[{}m'.format(code))
 
 class ClearStyle(Style):
     def apply(self, output):
