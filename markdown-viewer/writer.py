@@ -109,16 +109,19 @@ class DisplayWriter(TextStyleWriter):
                 break_index = self.get_break_index(buf)
 
                 if break_index is None:
-                    # If we can't find a break point, then just break where we are
-                    # The last char is the char that went over the limit,
-                    # so put it on the next line
-                    self.output.write(buf[:-1])
-                    self.new_line()
-                    buf = char
+                    if len(buf) < self.line_space:
+                        self.new_line()
+                    else:
+                        # Can't fit it on next line, so just split here
+                        self.output.write(buf[:-1])
+                        self.new_line()
+                        buf = char
                 else:
                     self.output.write(buf[:break_index])
                     self.new_line()
                     buf = buf[break_index + 1:]
+
+                self.chars_on_line = utils.get_printable_length(buf)
 
         self.output.write(buf)
 
