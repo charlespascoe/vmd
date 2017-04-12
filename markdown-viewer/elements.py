@@ -30,3 +30,7 @@ class Heading(Text):
             raise Exception('Invalid Heading level: {}'.format(level))
         self.level = level
         super().__init__(*args)
+
+class Document:
+    def __init__(self, *children):
+        self.children = list(children)
