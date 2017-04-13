@@ -24,26 +24,25 @@ class TreeBuilder(HTMLParser):
         heading_match = self.heading_regex.search(tag)
 
         if heading_match:
-            self.new_element(Heading(int(heading_match.group(1))))
+            self.new_element(tag, Heading(int(heading_match.group(1))))
         elif tag == 'p':
-            self.new_element(Paragraph())
+            self.new_element(tag, Paragraph())
         elif tag == 'strong':
-            self.new_element(Strong())
+            self.new_element(tag, Strong())
         elif tag == 'em':
-            self.new_element(Emphasis())
+            self.new_element(tag, Emphasis())
         else:
             raise Exception('Unhandled tag type: ' + tag)
 
 
-    def new_element(self, elm):
+    def new_element(self, tag, elm):
+        elm.tag = tag
         self.current_element.add_child(elm)
         self.current_element = elm
 
     def handle_endtag(self, tag):
-        if tag == 'br':
-            return
-
-        self.current_element = self.current_element.parent
+        if tag == self.current_element.tag:
+            self.current_element = self.current_element.parent
 
     def handle_data(self, data):
         if data != '\n':
