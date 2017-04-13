@@ -42,5 +42,9 @@ class Heading(Text):
         super().__init__(*args)
 
 
+class InlineCode(Text):
+    pass
+
+
 class Document(Element):
     pass

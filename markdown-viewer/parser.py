@@ -31,6 +31,8 @@ class TreeBuilder(HTMLParser):
             self.new_element(tag, Strong())
         elif tag == 'em':
             self.new_element(tag, Emphasis())
+        elif tag == 'code':
+            self.new_element(tag, InlineCode())
         else:
             raise Exception('Unhandled tag type: ' + tag)
 
