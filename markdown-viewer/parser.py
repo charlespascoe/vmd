@@ -20,6 +20,13 @@ class TreeBuilder(HTMLParser):
         self.current_element = self.document
         self.heading_regex = re.compile('^h(1|2|3|4|5|6)$')
 
+    def get_attr(self, attrs, find_key, default=None):
+        for key, value in attrs:
+            if key == find_key:
+                return value
+
+        return default
+
     def handle_starttag(self, tag, attrs):
         heading_match = self.heading_regex.search(tag)
 
@@ -33,6 +40,8 @@ class TreeBuilder(HTMLParser):
             self.new_element(tag, Emphasis())
         elif tag == 'code':
             self.new_element(tag, InlineCode())
+        elif tag == 'a':
+            self.new_element(tag, Link(self.get_attr(attrs, 'href', '[No Link]')))
         else:
             raise Exception('Unhandled tag type: ' + tag)
 

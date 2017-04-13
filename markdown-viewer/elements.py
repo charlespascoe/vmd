@@ -46,5 +46,11 @@ class InlineCode(Text):
     pass
 
 
+class Link(Text):
+    def __init__(self, path, *args):
+        self.path = path
+        super().__init__(*args)
+
+
 class Document(Element):
     pass
