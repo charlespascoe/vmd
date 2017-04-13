@@ -65,3 +65,42 @@ class AppendLinkFormatter(Formatter):
         writer.pop_style()
 
         para.add_child(Text('\n', Text(self.link_style, link_index, ' ', elm.path)))
+
+
+class ListFormatter(Formatter):
+    def format(self, renderer, elm, writer):
+        writer.new_line()
+        super().format(renderer, elm, writer)
+
+        if elm.get_depth() == 0:
+            writer.new_line()
+
+
+class ListItemFormatter(Formatter):
+    def __init__(self):
+        self.bullet_style = ForegroundColourStyle(208)
+        super().__init__()
+
+    def format(self, renderer, elm, writer):
+        self.format_list_item(renderer, elm, writer, ' • ')
+
+    def format_list_item(self, renderer, elm, writer, bullet):
+        prev_prefix = writer.prefix
+        writer.prefix = Text(writer.prefix, ''.ljust(len(bullet)))
+        writer.write_text(Text(self.bullet_style, bullet))
+
+        super().format(renderer, elm, writer)
+
+        writer.prefix = prev_prefix
+
+        if not elm.is_last:
+            writer.new_line()
+
+
+class OrderedListItemFormatter(ListItemFormatter):
+    def format(self, renderer, elm, writer):
+        max_index = elm.parent.prev_index
+
+        index = str(elm.index).rjust(len(str(max_index)))
+
+        self.format_list_item(renderer, elm, writer, ' {}. '.format(index))
