@@ -1,6 +1,6 @@
 from styles import Style
 
-class Text:
+class Element:
     def __init__(self, *args):
         args = list(args)
 
@@ -10,6 +10,16 @@ class Text:
             self.style = None
 
         self.children = args
+        self.parent = None
+
+    def add_child(self, child):
+        self.children.append(child)
+
+        if isinstance(child, Element):
+            child.parent = self
+
+class Text(Element):
+    pass
 
 
 class Strong(Text):
@@ -31,6 +41,6 @@ class Heading(Text):
         self.level = level
         super().__init__(*args)
 
-class Document:
-    def __init__(self, *children):
-        self.children = list(children)
+
+class Document(Element):
+    pass
