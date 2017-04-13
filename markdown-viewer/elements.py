@@ -37,7 +37,7 @@ class Emphasis(Text):
     pass
 
 
-class Paragraph(Text):
+class Linkable(Text):
     def __init__(self, *args):
         self.prev_link_index = 0
         super().__init__(*args)
@@ -46,6 +46,9 @@ class Paragraph(Text):
         self.prev_link_index += 1
         return self.prev_link_index
 
+
+class Paragraph(Linkable):
+    pass
 
 class Heading(Text):
     def __init__(self, level, *args):
@@ -64,6 +67,9 @@ class Link(Text):
         self.path = path
         super().__init__(*args)
 
+    def find_linkable_ancestor(self):
+        return self.find_ancestor(Linkable)
+
 
 class List(Element):
     def get_depth(self):
@@ -79,7 +85,7 @@ class List(Element):
         super().add_child(child)
 
 
-class ListItem(Text):
+class ListItem(Linkable):
     def get_depth(self):
         return self.parent.get_depth()
 

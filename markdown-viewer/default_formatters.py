@@ -56,15 +56,16 @@ class AppendLinkFormatter(Formatter):
     def format(self, renderer, elm, writer):
         super().format(renderer, elm, writer)
 
-        para = elm.find_ancestor(Paragraph)
+        linkable = elm.find_linkable_ancestor()
 
-        link_index = utils.to_superscript(para.next_link_index())
+        if linkable is not None:
+            link_index = utils.to_superscript(linkable.next_link_index())
 
-        writer.push_style(self.style)
-        writer.write_text(link_index)
-        writer.pop_style()
+            writer.push_style(self.style)
+            writer.write_text(link_index)
+            writer.pop_style()
 
-        para.add_child(Text('\n', Text(self.link_style, link_index, ' ', elm.path)))
+            linkable.add_child(Text('\n', Text(self.link_style, link_index, ' ', elm.path)))
 
 
 class ListFormatter(Formatter):
