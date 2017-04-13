@@ -65,5 +65,46 @@ class Link(Text):
         super().__init__(*args)
 
 
+class List(Element):
+    def get_depth(self):
+        if isinstance(self.parent, ListItem):
+            return self.parent.get_depth() + 1
+        else:
+            return 0
+
+    def add_child(self, child):
+        if not isinstance(child, ListItem):
+            raise Exception('child must be a ListItem')
+
+        super().add_child(child)
+
+
+class ListItem(Text):
+    def get_depth(self):
+        return self.parent.get_depth()
+
+    @property
+    def is_last(self):
+        return self.parent.children[-1] == self
+
+class OrderedList(List):
+    def __init__(self, *args):
+        self.prev_index = 0
+        super().__init__(*args)
+
+    def add_child(self, child):
+        super().add_child(child)
+
+        self.prev_index += 1
+
+        child.index = self.prev_index
+
+
+class OrderedListItem(ListItem):
+    def __init__(self, *args):
+        self.index = 1
+        super().__init__(*args)
+
+
 class Document(Element):
     pass

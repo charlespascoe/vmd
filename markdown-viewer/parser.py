@@ -42,6 +42,17 @@ class TreeBuilder(HTMLParser):
             self.new_element(tag, InlineCode())
         elif tag == 'a':
             self.new_element(tag, Link(self.get_attr(attrs, 'href', '[No Link]')))
+        elif tag == 'ul':
+            self.new_element(tag, List())
+        elif tag == 'ol':
+            self.new_element(tag, OrderedList())
+        elif tag == 'li':
+            if isinstance(self.current_element, OrderedList):
+                self.new_element(tag, OrderedListItem())
+            elif isinstance(self.current_element, List):
+                self.new_element(tag, ListItem())
+            else:
+                raise Exception('Unexpected list item')
         else:
             raise Exception('Unhandled tag type: ' + tag)
 
