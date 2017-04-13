@@ -8,3 +8,7 @@ def get_printable_length(text):
         return sum((get_printable_length(child) for child in text.children))
 
     raise Exception('Unknown text type: {}'.format(text.__class__.__name__))
+
+def to_superscript(number):
+    supers = '⁰¹²³⁴⁵⁶⁷⁸⁹'
+    return ''.join((supers[int(d)] for d in str(number)))

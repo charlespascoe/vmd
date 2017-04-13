@@ -1,5 +1,7 @@
 from styles import *
 from formatter import Formatter
+from elements import *
+import utils
 
 
 class HeadingFormatter(Formatter):
@@ -44,3 +46,22 @@ class EmphasisFormatter(Formatter):
 class InlineCodeFormatter(Formatter):
     def __init__(self):
         self.style = CompositeStyle(ClearStyle(), ForegroundColourStyle(196), BackgroundColourStyle(52))
+
+
+class AppendLinkFormatter(Formatter):
+    def __init__(self):
+        self.style = ForegroundColourStyle(82)
+        self.link_style = ForegroundColourStyle(240)
+
+    def format(self, renderer, elm, writer):
+        super().format(renderer, elm, writer)
+
+        para = elm.find_ancestor(Paragraph)
+
+        link_index = utils.to_superscript(para.next_link_index())
+
+        writer.push_style(self.style)
+        writer.write_text(link_index)
+        writer.pop_style()
+
+        para.add_child(Text('\n', Text(self.link_style, link_index, ' ', elm.path)))

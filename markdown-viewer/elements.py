@@ -18,6 +18,13 @@ class Element:
         if isinstance(child, Element):
             child.parent = self
 
+    def find_ancestor(self, element_type):
+        if self.parent is None or isinstance(self.parent, element_type):
+            return self.parent
+
+        return self.parent.find_ancestor(element_type)
+
+
 class Text(Element):
     pass
 
@@ -31,7 +38,13 @@ class Emphasis(Text):
 
 
 class Paragraph(Text):
-    pass
+    def __init__(self, *args):
+        self.prev_link_index = 0
+        super().__init__(*args)
+
+    def next_link_index(self):
+        self.prev_link_index += 1
+        return self.prev_link_index
 
 
 class Heading(Text):
