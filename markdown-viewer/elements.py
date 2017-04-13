@@ -93,6 +93,7 @@ class ListItem(Linkable):
     def is_last(self):
         return self.parent.children[-1] == self
 
+
 class OrderedList(List):
     def __init__(self, *args):
         self.prev_index = 0

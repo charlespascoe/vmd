@@ -20,6 +20,8 @@ class TreeBuilder(HTMLParser):
         self.current_element = self.document
         self.heading_regex = re.compile('^h(1|2|3|4|5|6)$')
 
+        self.unknown_tag_stack = []
+
     def get_attr(self, attrs, find_key, default=None):
         for key, value in attrs:
             if key == find_key:
@@ -28,6 +30,9 @@ class TreeBuilder(HTMLParser):
         return default
 
     def handle_starttag(self, tag, attrs):
+        if len(self.unknown_tag_stack) > 0:
+            self.unknown_tag_stack.push(tag)
+
         heading_match = self.heading_regex.search(tag)
 
         if heading_match:
@@ -54,7 +59,8 @@ class TreeBuilder(HTMLParser):
             else:
                 raise Exception('Unexpected list item')
         else:
-            raise Exception('Unhandled tag type: ' + tag)
+            #TODO: Logging!
+            self.unknown_tag_stack.append(tag)
 
 
     def new_element(self, tag, elm):
@@ -63,6 +69,10 @@ class TreeBuilder(HTMLParser):
         self.current_element = elm
 
     def handle_endtag(self, tag):
+        if len(self.unknown_tag_stack) > 0 and self.unknown_tag_stack[-1] == tag:
+            self.unknown_tag_stack.pop(-1)
+            return
+
         if tag == self.current_element.tag:
             self.current_element = self.current_element.parent
 
