@@ -70,19 +70,9 @@ class DisplayWriter(TextStyleWriter):
             self._prefix = ''
             self.prefix_printable_length = 0
 
-        if self.chars_on_line > 0:
-            self.new_line()
-        else:
-            self.write_prefix()
-
-    @property
-    def line_space(self):
-        # The mod allows a very long prefix to wrap onto the next line, if it's longer than the terminal width
-        return self.columns - (self.prefix_printable_length % self.columns)
-
     @property
     def available_line_space(self):
-        return self.line_space - self.chars_on_line
+        return self.columns - self.chars_on_line
 
     def write_text(self, text):
         # This method override is only interested in actual strings
@@ -109,7 +99,7 @@ class DisplayWriter(TextStyleWriter):
                 break_index = self.get_break_index(buf)
 
                 if break_index is None:
-                    if len(buf) < self.line_space:
+                    if len(buf) < self.columns - self.prefix_printable_length:
                         self.new_line()
                     else:
                         # Can't fit it on next line, so just split here
@@ -121,7 +111,7 @@ class DisplayWriter(TextStyleWriter):
                     self.new_line()
                     buf = buf[break_index + 1:]
 
-                self.chars_on_line = utils.get_printable_length(buf)
+                self.chars_on_line += utils.get_printable_length(buf)
 
         self.output.write(buf)
 
@@ -142,4 +132,5 @@ class DisplayWriter(TextStyleWriter):
         if self.prefix != '':
             self.push_style(ClearStyle())
             TextStyleWriter(self.output).write_text(self.prefix)
+            self.chars_on_line += self.prefix_printable_length
             self.pop_style()

@@ -13,20 +13,20 @@ class HeadingFormatter(Formatter):
         writer.prefix = ''.ljust((elm.level - 1) * 2)
         writer.new_line()
 
-        if elm.level == 1:
-            writer.new_line()
-
         super().format(renderer, elm, writer)
 
-        writer.new_line()
-        writer.new_line()
         writer.prefix = ''.ljust(elm.level * 2)
+        writer.new_line()
 
 class ParagraphFormatter(Formatter):
     def format(self, renderer, elm, writer):
+        writer.new_line()
+
         writer.write_text('  ')
 
         super().format(renderer, elm, writer)
+
+        writer.new_line()
 
 class StrongFormatter(Formatter):
     def __init__(self):
