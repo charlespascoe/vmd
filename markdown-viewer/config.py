@@ -54,9 +54,7 @@ class ConfigReader:
         config = {}
 
         while line is not None:
-            print(line)
             entry_match = self.entry_regex.search(line)
-            print(entry_match)
 
             if entry_match is not None:
                 if current_group is None:
