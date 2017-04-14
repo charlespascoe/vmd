@@ -96,10 +96,10 @@ class StylesConfig:
         self.headings = [
             CompositeStyle(self.heading_base, self.parse_style(config, 'heading1')),
             CompositeStyle(self.heading_base, self.parse_style(config, 'heading2')),
-            CompositeStyle(self.heading_base, self.parse_style(config, 'heading3')),
-            CompositeStyle(self.heading_base, self.parse_style(config, 'heading4')),
-            CompositeStyle(self.heading_base, self.parse_style(config, 'heading5')),
-            CompositeStyle(self.heading_base, self.parse_style(config, 'heading6'))
+            CompositeStyle(self.heading_base, self.parse_style(config, 'heading3', FaintStyle())),
+            CompositeStyle(self.heading_base, self.parse_style(config, 'heading4', FaintStyle())),
+            CompositeStyle(self.heading_base, self.parse_style(config, 'heading5', FaintStyle())),
+            CompositeStyle(self.heading_base, self.parse_style(config, 'heading6', FaintStyle()))
         ]
 
         self.strong = self.parse_style(config, 'strong', BoldStyle())
@@ -132,7 +132,8 @@ class StyleParser:
             'bold': BoldStyle(),
             'italic': ItalicStyle(),
             'underline': UnderlineStyle(),
-            'inverse': InverseStyle()
+            'inverse': InverseStyle(),
+            'faint': FaintStyle()
         }
 
         self.colour_style_regex = re.compile('^(f|b)gcolour\((\d{1,3})\)$')

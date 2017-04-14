@@ -47,6 +47,11 @@ class InverseStyle(Style):
         self.write_escape_code('7', output)
 
 
+class FaintStyle(Style):
+    def apply(self, output):
+        self.write_escape_code('2', output)
+
+
 class CompositeStyle(Style):
     def __init__(self, *styles):
         self.styles = styles
