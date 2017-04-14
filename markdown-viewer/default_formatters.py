@@ -5,18 +5,17 @@ import utils
 
 
 class HeadingFormatter(Formatter):
-    def __init__(self):
-        self.style = CompositeStyle(
-            ClearStyle(),
-            BoldStyle(),
-            ForegroundColourStyle(208)
-        )
+    def __init__(self, config):
+        self.config = config
+        super().__init__()
 
     def format(self, renderer, elm, writer):
         writer.prefix = ''.ljust((elm.level - 1) * 2)
         writer.new_line()
 
+        writer.push_style(self.config.style_config.headings[elm.level - 1])
         super().format(renderer, elm, writer)
+        writer.pop_style()
 
         writer.prefix = ''.ljust(elm.level * 2)
         writer.new_line()

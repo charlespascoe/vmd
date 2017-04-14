@@ -6,6 +6,11 @@ from renderer import Renderer
 import default_formatters
 import sys
 from parser import Parser
+from config import Config
+
+config = Config('~/.vmdrc')
+
+config.load()
 
 p = Parser()
 
@@ -13,7 +18,7 @@ doc = p.parse(sys.stdin.read())
 
 renderer = Renderer(DisplayWriter(sys.stdout, 30))
 renderer.formatters['Paragraph'] = default_formatters.ParagraphFormatter()
-renderer.formatters['Heading'] = default_formatters.HeadingFormatter()
+renderer.formatters['Heading'] = default_formatters.HeadingFormatter(config)
 renderer.formatters['Strong'] = default_formatters.StrongFormatter()
 renderer.formatters['Emphasis'] = default_formatters.EmphasisFormatter()
 renderer.formatters['InlineCode'] = default_formatters.InlineCodeFormatter()
