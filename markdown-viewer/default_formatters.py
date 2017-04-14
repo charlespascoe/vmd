@@ -13,7 +13,7 @@ class HeadingFormatter(Formatter):
         writer.prefix = ''.ljust((elm.level - 1) * 2)
         writer.new_line()
 
-        writer.push_style(self.config.style_config.headings[elm.level - 1])
+        writer.push_style(self.config.styles.headings[elm.level - 1])
         super().format(renderer, elm, writer)
         writer.pop_style()
 

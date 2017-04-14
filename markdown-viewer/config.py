@@ -6,28 +6,33 @@ from styles import *
 class Config:
     def __init__(self, path):
         self.path = path
+        self.config_classes = {
+            'styles': StylesConfig,
+            'formatting': FormattingConfig
+        }
+
+        self.config = {}
 
     def load(self):
         path = os.path.abspath(os.path.expanduser(self.path))
 
         if not os.path.isfile(path):
-            self.formatting_config = FormattingConfig()
-            self.style_config = StyleConfig()
+            for key, config_class in self.config_classes.items():
+                self.config[key] = config_class()
             return
 
         with open(path) as f:
             reader = ConfigReader(f)
             config = reader.read_config()
 
-        if 'formatting' in config:
-            self.formatting_config = FormattingConfig(config['formatting'])
-        else:
-            self.formatting_config = FormattingConfig()
+        for key, config_class in self.config_classes.items():
+            if key in config:
+                self.config[key] = config_class(config[key])
+            else:
+                self.config[key] = config_class()
 
-        if 'styles' in config:
-            self.style_config = StyleConfig(config['styles'])
-        else:
-            self.style_config = StyleConfig()
+    def __getattr__(self, name):
+        return self.config[name]
 
 
 class ConfigReader:
@@ -83,7 +88,7 @@ class ConfigReader:
         return config
 
 
-class StyleConfig:
+class StylesConfig:
     def __init__(self, config={}):
         self.config = config
 
