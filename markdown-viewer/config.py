@@ -90,26 +90,27 @@ class ConfigReader:
 
 class StylesConfig:
     def __init__(self, config={}):
-        self.config = config
-
         self.style_parser = StyleParser()
 
-        self.heading_base = self.parse_style('heading_base', CompositeStyle(ClearStyle(), BoldStyle(), ForegroundColourStyle(208)))
+        self.heading_base = self.parse_style(config, 'heading_base', CompositeStyle(ClearStyle(), BoldStyle(), ForegroundColourStyle(208)))
         self.headings = [
-            CompositeStyle(self.heading_base, self.parse_style('heading1')),
-            CompositeStyle(self.heading_base, self.parse_style('heading2')),
-            CompositeStyle(self.heading_base, self.parse_style('heading3')),
-            CompositeStyle(self.heading_base, self.parse_style('heading4')),
-            CompositeStyle(self.heading_base, self.parse_style('heading5')),
-            CompositeStyle(self.heading_base, self.parse_style('heading6'))
+            CompositeStyle(self.heading_base, self.parse_style(config, 'heading1')),
+            CompositeStyle(self.heading_base, self.parse_style(config, 'heading2')),
+            CompositeStyle(self.heading_base, self.parse_style(config, 'heading3')),
+            CompositeStyle(self.heading_base, self.parse_style(config, 'heading4')),
+            CompositeStyle(self.heading_base, self.parse_style(config, 'heading5')),
+            CompositeStyle(self.heading_base, self.parse_style(config, 'heading6'))
         ]
 
-    def parse_style(self, key, default=None):
-        if key not in self.config:
+        for key in config:
+            raise Exception('Unknown setting in styles section: {}'.format(key))
+
+    def parse_style(self, config, key, default=None):
+        if key not in config:
             return default
 
-        style = self.config[key]
-        del self.config[key]
+        style = config[key]
+        del config[key]
 
         return self.style_parser.parse(style)
 
@@ -155,5 +156,6 @@ class StyleParser:
 
 
 class FormattingConfig:
-    def __init__(self, formatting_config={}):
-        pass
+    def __init__(self, config={}):
+        for key in config:
+            raise Exception('Unknown setting in formatting section: {}'.format(key))
