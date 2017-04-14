@@ -102,6 +102,16 @@ class StylesConfig:
             CompositeStyle(self.heading_base, self.parse_style(config, 'heading6'))
         ]
 
+        self.strong = self.parse_style(config, 'strong', BoldStyle())
+        self.emphasis = self.parse_style(config, 'emphasis', ItalicStyle())
+        self.inline_code = self.parse_style(config, 'inline_code', CompositeStyle(ClearStyle(), ForegroundColourStyle(196), BackgroundColourStyle(52)))
+        self.link = self.parse_style(config, 'link', CompositeStyle(UnderlineStyle(), ForegroundColourStyle(82)))
+        self.link_index = self.parse_style(config, 'link_index', ForegroundColourStyle(82))
+        self.link_hint = self.parse_style(config, 'link_hint', ForegroundColourStyle(240))
+        self.list_bullet = self.parse_style(config, 'list_bullet', ForegroundColourStyle(208))
+        self.list_number = self.parse_style(config, 'list_number', self.list_bullet)
+        self.paragraph = self.parse_style(config, 'paragraph')
+
         for key in config:
             raise Exception('Unknown setting in styles section: {}'.format(key))
 
@@ -139,7 +149,7 @@ class StyleParser:
                 colour_match = self.colour_style_regex.search(style_str)
 
                 if colour_match is None:
-                    raise Exception('Unknown style identifier: "{}" (for {})'.format(style_str, key))
+                    raise Exception('Unknown style identifier: "{}"'.format(style_str))
 
                 if colour_match.group(1) == 'f':
                     styles.append(ForegroundColourStyle(int(colour_match.group(2))))

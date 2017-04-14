@@ -22,6 +22,9 @@ class HeadingFormatter(Formatter):
 
 
 class ParagraphFormatter(Formatter):
+    def __init__(self, config):
+        self.style = config.styles.paragraph
+
     def format(self, renderer, elm, writer):
         writer.new_line()
 
@@ -33,24 +36,25 @@ class ParagraphFormatter(Formatter):
 
 
 class StrongFormatter(Formatter):
-    def __init__(self):
-        self.style = BoldStyle()
+    def __init__(self, config):
+        self.style = config.styles.strong
 
 
 class EmphasisFormatter(Formatter):
-    def __init__(self):
-        self.style = ItalicStyle()
+    def __init__(self, config):
+        self.style = config.styles.emphasis
 
 
 class InlineCodeFormatter(Formatter):
-    def __init__(self):
-        self.style = CompositeStyle(ClearStyle(), ForegroundColourStyle(196), BackgroundColourStyle(52))
+    def __init__(self, config):
+        self.style = config.styles.inline_code
 
 
 class AppendLinkFormatter(Formatter):
-    def __init__(self):
-        self.style = ForegroundColourStyle(82)
-        self.link_style = ForegroundColourStyle(240)
+    def __init__(self, config):
+        self.style = config.styles.link
+        self.link_index_style = config.styles.link_index
+        self.link_hint_style = config.styles.link_hint
 
     def format(self, renderer, elm, writer):
         super().format(renderer, elm, writer)
@@ -60,11 +64,11 @@ class AppendLinkFormatter(Formatter):
         if linkable is not None:
             link_index = utils.to_superscript(linkable.next_link_index())
 
-            writer.push_style(self.style)
+            writer.push_style(self.link_index_style)
             writer.write_text(link_index)
             writer.pop_style()
 
-            linkable.add_child(Text('\n', Text(self.link_style, link_index, ' ', elm.path)))
+            linkable.add_child(Text('\n', Text(self.link_hint_style, link_index, ' ', elm.path)))
 
 
 class ListFormatter(Formatter):
@@ -77,8 +81,8 @@ class ListFormatter(Formatter):
 
 
 class ListItemFormatter(Formatter):
-    def __init__(self):
-        self.bullet_style = ForegroundColourStyle(208)
+    def __init__(self, config):
+        self.bullet_style = config.styles.list_bullet
         super().__init__()
 
     def format(self, renderer, elm, writer):
@@ -98,6 +102,10 @@ class ListItemFormatter(Formatter):
 
 
 class OrderedListItemFormatter(ListItemFormatter):
+    def __init__(self, config):
+        super().__init__(config)
+        self.bullet_style = config.styles.list_number
+
     def format(self, renderer, elm, writer):
         max_index = elm.parent.prev_index
 
