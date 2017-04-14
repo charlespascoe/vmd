@@ -114,7 +114,9 @@ class StyleParser:
         self.simple_styles = {
             'clear': ClearStyle(),
             'bold': BoldStyle(),
-            'italic': ItalicStyle()
+            'italic': ItalicStyle(),
+            'underline': UnderlineStyle(),
+            'inverse': InverseStyle()
         }
 
         self.colour_style_regex = re.compile('^(f|b)gcolour\((\d{1,3})\)$')
