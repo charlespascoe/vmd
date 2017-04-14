@@ -166,7 +166,41 @@ class StyleParser:
         return CompositeStyle(*styles)
 
 
+def parse_boolean(config, key, default=False):
+    if key not in config:
+        return default
+
+    val = config[key]
+
+    del config[key]
+
+    if val.lower() == 'true':
+        return True
+    elif val.lower() == 'false':
+        return False
+    else:
+        raise Exception('Failed to parse boolean expression: {}'.format(val))
+
+
+def parse_int(config, key, default=0):
+    if key not in config:
+        return default
+
+    val = config[key]
+
+    del config[key]
+
+    try:
+        return int(val)
+    except:
+        raise Exception('Failed to parse boolean expression: {}'.format(val))
+
+
 class FormattingConfig:
     def __init__(self, config={}):
+        self.indent_paragraph_first_line = parse_boolean(config, 'indent_paragraph_first_line', True)
+        self.heading_indent_limit = parse_int(config, 'heading_indent_limit', 6)
+        self.align_content_with_headings = parse_boolean(config, 'align_content_with_headings', True)
+
         for key in config:
             raise Exception('Unknown setting in formatting section: {}'.format(key))

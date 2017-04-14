@@ -10,25 +10,33 @@ class HeadingFormatter(Formatter):
         super().__init__()
 
     def format(self, renderer, elm, writer):
-        writer.prefix = ''.ljust((elm.level - 1) * 2)
+        indent = min(elm.level - 1, self.config.formatting.heading_indent_limit) * 2
+
+        writer.prefix = ''.ljust(indent + 1)
         writer.new_line()
 
         writer.push_style(self.config.styles.headings[elm.level - 1])
         super().format(renderer, elm, writer)
         writer.pop_style()
 
-        writer.prefix = ''.ljust(elm.level * 2)
+        if self.config.formatting.align_content_with_headings:
+            writer.prefix = ''.ljust(indent + 3)
+        else:
+            writer.prefix = ' '
+
         writer.new_line()
 
 
 class ParagraphFormatter(Formatter):
     def __init__(self, config):
         self.style = config.styles.paragraph
+        self.indent = config.formatting.indent_paragraph_first_line
 
     def format(self, renderer, elm, writer):
         writer.new_line()
 
-        writer.write_text('  ')
+        if self.indent:
+            writer.write_text('  ')
 
         super().format(renderer, elm, writer)
 
