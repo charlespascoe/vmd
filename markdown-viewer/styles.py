@@ -37,4 +37,5 @@ class CompositeStyle(Style):
 
     def apply(self, output):
         for style in self.styles:
-            style.apply(output)
+            if style is not None:
+                style.apply(output)
