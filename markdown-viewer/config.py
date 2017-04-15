@@ -99,6 +99,17 @@ class StylesConfig:
             CompositeStyle(self.heading_base, self.parse_style(config, 'heading6'))
         ]
 
+        self.heading_index_base = self.parse_style(config, 'heading_index_base')
+
+        self.heading_index = [
+            CompositeStyle(self.headings[0], self.heading_index_base, self.parse_style(config, 'heading1_index')),
+            CompositeStyle(self.headings[1], self.heading_index_base, self.parse_style(config, 'heading2_index')),
+            CompositeStyle(self.headings[2], self.heading_index_base, self.parse_style(config, 'heading3_index')),
+            CompositeStyle(self.headings[3], self.heading_index_base, self.parse_style(config, 'heading4_index')),
+            CompositeStyle(self.headings[4], self.heading_index_base, self.parse_style(config, 'heading5_index')),
+            CompositeStyle(self.headings[5], self.heading_index_base, self.parse_style(config, 'heading6_index')),
+        ]
+
         self.strong = self.parse_style(config, 'strong')
         self.emphasis = self.parse_style(config, 'emphasis')
         self.inline_code = self.parse_style(config, 'inline_code')

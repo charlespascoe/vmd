@@ -36,7 +36,9 @@ class TreeBuilder(HTMLParser):
         heading_match = self.heading_regex.search(tag)
 
         if heading_match:
-            self.new_element(tag, Heading(int(heading_match.group(1))))
+            heading = Heading(int(heading_match.group(1)))
+            self.new_element(tag, heading)
+            self.document.add_heading(heading)
         elif tag == 'p':
             self.new_element(tag, Paragraph())
         elif tag == 'strong':

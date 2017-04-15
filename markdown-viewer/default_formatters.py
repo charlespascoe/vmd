@@ -15,6 +15,10 @@ class HeadingFormatter(Formatter):
         writer.prefix = ''.ljust(indent + 1)
         writer.new_line()
 
+        writer.push_style(self.config.styles.heading_index[elm.level - 1])
+        writer.write_text(elm.index)
+        writer.pop_style()
+        writer.write_text(' ')
         writer.push_style(self.config.styles.headings[elm.level - 1])
         super().format(renderer, elm, writer)
         writer.pop_style()

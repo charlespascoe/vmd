@@ -55,7 +55,13 @@ class Heading(Text):
         if not isinstance(level, int) or level < 1 or level > 6:
             raise Exception('Invalid Heading level: {}'.format(level))
         self.level = level
+        self.prev_subheading_index = 0
+        self.index = '0'
         super().__init__(*args)
+
+    def next_subheading_index(self):
+        self.prev_subheading_index += 1
+        return '{}.{}'.format(self.index, self.prev_subheading_index)
 
 
 class InlineCode(Text):
@@ -114,4 +120,18 @@ class OrderedListItem(ListItem):
 
 
 class Document(Element):
-    pass
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.headings = []
+        self.prev_heading_index = 0
+
+    def add_heading(self, new_heading):
+        for heading in reversed(self.headings):
+            if heading.level < new_heading.level:
+                new_heading.index = heading.next_subheading_index()
+                break
+        else:
+            self.prev_heading_index += 1
+            new_heading.index = str(self.prev_heading_index)
+
+        self.headings.append(new_heading)
