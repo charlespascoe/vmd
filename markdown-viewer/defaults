@@ -12,4 +12,5 @@
   link_index = fgcolour(82)
   link_hint = fgcolour(240)
   list_bullet = fgcolour(208)
+  horizonal_rule = fgcolour(240)
 

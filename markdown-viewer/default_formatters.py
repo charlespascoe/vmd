@@ -124,3 +124,19 @@ class OrderedListItemFormatter(ListItemFormatter):
         index = str(elm.index).rjust(len(str(max_index)))
 
         self.format_list_item(renderer, elm, writer, ' {}. '.format(index))
+
+class HorizontalRuleFormatter(Formatter):
+    def __init__(self, config):
+        self.style = config.styles.horizonal_rule
+
+    def format(self, renderer, elm, writer):
+        prev_prefix = writer.prefix
+        writer.prefix = ''
+        writer.new_line()
+
+        writer.push_style(self.style)
+        writer.write_text(' ' + ''.ljust(writer.columns - 2, '━') + ' ')
+        writer.pop_style()
+
+        writer.prefix = prev_prefix
+        writer.new_line()

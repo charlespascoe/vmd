@@ -66,6 +66,8 @@ class TreeBuilder(HTMLParser):
                 self.new_element(tag, ListItem())
             else:
                 self.logger.warning('Unexpected list item found in %s', self.current_element.tag_ancestry())
+        elif tag == 'hr':
+            self.current_element.add_child(HorizontalRule())
         else:
             self.logger.warn('Unhandled tag type \'%s\' found in %s', tag, self.current_element.tag_ancestry())
             self.unknown_tag_stack.append(tag)

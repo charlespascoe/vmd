@@ -128,6 +128,11 @@ class OrderedListItem(ListItem):
         super().__init__(*args)
 
 
+class HorizontalRule: # Not element - it cannot have children
+    def __init__(self):
+        self.tag = 'hr'
+
+
 class Document(Element):
     def __init__(self, *args):
         super().__init__(*args)

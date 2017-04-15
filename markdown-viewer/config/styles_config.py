@@ -36,6 +36,7 @@ class StylesConfig:
         self.list_bullet = self.parse_style(config, 'list_bullet')
         self.list_number = CompositeStyle(self.list_bullet, self.parse_style(config, 'list_number'))
         self.paragraph = self.parse_style(config, 'paragraph')
+        self.horizonal_rule = self.parse_style(config, 'horizonal_rule')
 
         for key in config:
             raise Exception('Unknown setting in styles section: {}'.format(key))

@@ -30,6 +30,7 @@ renderer.formatters['List'] = default_formatters.ListFormatter()
 renderer.formatters['ListItem'] = default_formatters.ListItemFormatter(config)
 renderer.formatters['OrderedList'] = 'List'
 renderer.formatters['OrderedListItem'] = default_formatters.OrderedListItemFormatter(config)
+renderer.formatters['HorizontalRule'] = default_formatters.HorizontalRuleFormatter(config)
 
 renderer.render_document(doc)
 
