@@ -78,7 +78,7 @@ def main():
         with open(args.file) as f:
             doc = mdparser.parse(f.read())
     else:
-        print('You need to specify either a file path or --stdin')
+        parser.print_help()
         sys.exit(1)
 
     renderer.render_document(doc)
