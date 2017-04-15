@@ -69,7 +69,6 @@ class CodeBlockFormatter(Formatter):
 
     def format(self, renderer, elm, writer):
         prefix = writer.prefix
-        writer.new_line()
 
         lines = elm.lines()
 
