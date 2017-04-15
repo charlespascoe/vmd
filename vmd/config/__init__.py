@@ -23,7 +23,7 @@ class Config:
         for path in self.paths:
             path = os.path.abspath(os.path.expanduser(path))
 
-            self.logger.debug('Attempting to load config file: %s', path)
+            self.logger.info('Attempting to load config file: %s', path)
 
             try:
                 with open(path) as f:
