@@ -4,8 +4,8 @@ from styles import *
 
 
 class Config:
-    def __init__(self, path):
-        self.path = path
+    def __init__(self, paths):
+        self.paths = paths
         self.config_classes = {
             'styles': StylesConfig,
             'formatting': FormattingConfig
@@ -14,20 +14,19 @@ class Config:
         self.config = {}
 
     def load(self):
-        path = os.path.abspath(os.path.expanduser(self.path))
+        for path in self.paths:
+            path = os.path.abspath(os.path.expanduser(path))
 
-        if not os.path.isfile(path):
-            for key, config_class in self.config_classes.items():
-                self.config[key] = config_class()
-            return
-
-        with open(path) as f:
-            reader = ConfigReader(f)
-            config = reader.read_config()
+            try:
+                with open(path) as f:
+                    reader = ConfigReader(f, self.config)
+                    self.config = reader.read_config()
+            except FileNotFoundError:
+                pass # Just ignore non-existent files
 
         for key, config_class in self.config_classes.items():
-            if key in config:
-                self.config[key] = config_class(config[key])
+            if key in self.config:
+                self.config[key] = config_class(self.config[key])
             else:
                 self.config[key] = config_class()
 
@@ -36,11 +35,12 @@ class Config:
 
 
 class ConfigReader:
-    def __init__(self, conf_file):
+    def __init__(self, conf_file, config={}):
         self.conf_file = conf_file
         self.comment_regex = re.compile('^([^#]*)#?')
         self.group_header_regex = re.compile('^\[([a-z_]+)\]$')
         self.entry_regex = re.compile('^(\s|\t)*([a-z0-9_]+)(\s|\t)*=(.*)$')
+        self.config = config
 
     def read_line(self):
         line = self.conf_file.readline()
@@ -56,7 +56,6 @@ class ConfigReader:
     def read_config(self):
         line = self.read_line()
         current_group = None
-        config = {}
 
         while line is not None:
             entry_match = self.entry_regex.search(line)
@@ -65,7 +64,7 @@ class ConfigReader:
                 if current_group is None:
                     raise Exception('Unexpected line in config: {}'.format(line))
 
-                config[current_group][entry_match.group(2)] = entry_match.group(4).strip()
+                self.config[current_group][entry_match.group(2)] = entry_match.group(4).strip()
 
                 line = self.read_line()
                 continue
@@ -75,47 +74,45 @@ class ConfigReader:
             if group_header_match is not None:
                 current_group = group_header_match.group(1)
 
-                if current_group in config:
-                    raise Exception('Group defined twice: {}'.format(current_group))
-
-                config[current_group] = {}
+                if current_group not in self.config:
+                    self.config[current_group] = {}
 
                 line = self.read_line()
                 continue
 
             raise Exception('Unparsable line in config: {}'.format(line))
 
-        return config
+        return self.config
 
 
 class StylesConfig:
     def __init__(self, config={}):
         self.style_parser = StyleParser()
 
-        self.heading_base = self.parse_style(config, 'heading_base', CompositeStyle(ClearStyle(), BoldStyle(), ForegroundColourStyle(208)))
+        self.heading_base = self.parse_style(config, 'heading_base')
         self.headings = [
             CompositeStyle(self.heading_base, self.parse_style(config, 'heading1')),
             CompositeStyle(self.heading_base, self.parse_style(config, 'heading2')),
-            CompositeStyle(self.heading_base, self.parse_style(config, 'heading3', FaintStyle())),
-            CompositeStyle(self.heading_base, self.parse_style(config, 'heading4', FaintStyle())),
-            CompositeStyle(self.heading_base, self.parse_style(config, 'heading5', FaintStyle())),
-            CompositeStyle(self.heading_base, self.parse_style(config, 'heading6', FaintStyle()))
+            CompositeStyle(self.heading_base, self.parse_style(config, 'heading3')),
+            CompositeStyle(self.heading_base, self.parse_style(config, 'heading4')),
+            CompositeStyle(self.heading_base, self.parse_style(config, 'heading5')),
+            CompositeStyle(self.heading_base, self.parse_style(config, 'heading6'))
         ]
 
-        self.strong = self.parse_style(config, 'strong', BoldStyle())
-        self.emphasis = self.parse_style(config, 'emphasis', ItalicStyle())
-        self.inline_code = self.parse_style(config, 'inline_code', CompositeStyle(ClearStyle(), ForegroundColourStyle(196), BackgroundColourStyle(52)))
-        self.link = self.parse_style(config, 'link', CompositeStyle(UnderlineStyle(), ForegroundColourStyle(82)))
-        self.link_index = self.parse_style(config, 'link_index', ForegroundColourStyle(82))
-        self.link_hint = self.parse_style(config, 'link_hint', ForegroundColourStyle(240))
-        self.list_bullet = self.parse_style(config, 'list_bullet', ForegroundColourStyle(208))
-        self.list_number = self.parse_style(config, 'list_number', self.list_bullet)
+        self.strong = self.parse_style(config, 'strong')
+        self.emphasis = self.parse_style(config, 'emphasis')
+        self.inline_code = self.parse_style(config, 'inline_code')
+        self.link = self.parse_style(config, 'link')
+        self.link_index = self.parse_style(config, 'link_index')
+        self.link_hint = self.parse_style(config, 'link_hint')
+        self.list_bullet = self.parse_style(config, 'list_bullet')
+        self.list_number = CompositeStyle(self.list_bullet, self.parse_style(config, 'list_number'))
         self.paragraph = self.parse_style(config, 'paragraph')
 
         for key in config:
             raise Exception('Unknown setting in styles section: {}'.format(key))
 
-    def parse_style(self, config, key, default=None):
+    def parse_style(self, config, key, default=NoOpStyle()):
         if key not in config:
             return default
 

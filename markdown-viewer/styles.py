@@ -6,6 +6,11 @@ class Style:
         output.write('\x1b[{}m'.format(code))
 
 
+class NoOpStyle(Style):
+    def apply(self, output):
+        pass
+
+
 class ClearStyle(Style):
     def apply(self, output):
         self.write_escape_code('0', output)

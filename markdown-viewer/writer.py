@@ -37,6 +37,8 @@ class TextStyleWriter:
 
             if text.style is not None:
                 self.pop_style()
+        elif text is None:
+            return
         else:
             raise Exception('Unknown type passed to TextStyleWriter.write_text: {}'.format(text.__class__.__name__))
 

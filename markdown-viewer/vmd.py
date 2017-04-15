@@ -8,7 +8,7 @@ import sys
 from parser import Parser
 from config import Config
 
-config = Config('~/.vmdrc')
+config = Config(['defaults', '~/.vmdrc'])
 
 config.load()
 
