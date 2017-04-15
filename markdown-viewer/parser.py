@@ -37,7 +37,8 @@ class TreeBuilder(HTMLParser):
 
     def handle_starttag(self, tag, attrs):
         if len(self.unknown_tag_stack) > 0:
-            self.unknown_tag_stack.push(tag)
+            self.unknown_tag_stack.append(tag)
+            return
 
         heading_match = self.heading_regex.search(tag)
 
@@ -87,5 +88,5 @@ class TreeBuilder(HTMLParser):
             self.current_element = self.current_element.parent
 
     def handle_data(self, data):
-        if data != '\n':
+        if data != '\n' and len(self.unknown_tag_stack) == 0:
             self.current_element.add_child(data)
