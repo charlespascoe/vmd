@@ -77,6 +77,13 @@ class InlineCode(Text):
     pass
 
 
+class CodeBlock(Text):
+    def lines(self):
+        text = ''.join((text for text in self.children if isinstance(text, str)))
+
+        return text.rstrip().split('\n')
+
+
 class Link(Text):
     def __init__(self, path, *args):
         self.path = path

@@ -52,8 +52,11 @@ class TreeBuilder(HTMLParser):
             self.new_element(tag, Strong())
         elif tag == 'em':
             self.new_element(tag, Emphasis())
+        elif tag == 'pre':
+            self.new_element(tag, CodeBlock())
         elif tag == 'code':
-            self.new_element(tag, InlineCode())
+            if not isinstance(self.current_element, CodeBlock):
+                self.new_element(tag, InlineCode())
         elif tag == 'a':
             self.new_element(tag, Link(self.get_attr(attrs, 'href', '[No Link]')))
         elif tag == 'ul':

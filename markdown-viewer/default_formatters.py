@@ -62,6 +62,29 @@ class InlineCodeFormatter(Formatter):
         self.style = config.styles.inline_code
 
 
+class CodeBlockFormatter(Formatter):
+    def __init__(self, config):
+        self.margin_style = config.styles.code_block_margin
+        super().__init__()
+
+    def format(self, renderer, elm, writer):
+        prefix = writer.prefix
+        writer.new_line()
+
+        lines = elm.lines()
+
+        line_pos_width = len(str(len(lines)))
+
+        for line_pos, line in enumerate(elm.lines()):
+            writer.new_line()
+            writer.write_text(Text(self.margin_style, ' {} ┃ '.format(str(line_pos + 1).rjust(line_pos_width))))
+            writer.prefix = Text(self.margin_style, prefix, ' {} ┃ '.format(''.rjust(line_pos_width)))
+            writer.write_text(line)
+            writer.prefix = prefix
+
+        writer.new_line()
+
+
 class AppendLinkFormatter(Formatter):
     def __init__(self, config):
         self.style = config.styles.link
