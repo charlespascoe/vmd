@@ -11,7 +11,7 @@
   link = underline,fgcolour(82)
   link_index = fgcolour(82)
   link_hint = fgcolour(240)
-  list_bullet = fgcolour(208)
+  list_bullet = fgcolour(64)
   horizonal_rule = fgcolour(240)
   code_block_margin = fgcolour(240)
 
