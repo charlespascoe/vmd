@@ -8,6 +8,7 @@ class ConfigReader:
         self.group_header_regex = re.compile('^\[([a-z_]+)\]$')
         self.entry_regex = re.compile('^(\s|\t)*([a-z0-9_]+)(\s|\t)*=(.*)$')
         self.config = config
+        self.no_group = {}
 
     def read_line(self):
         line = self.conf_file.readline()
@@ -22,16 +23,13 @@ class ConfigReader:
 
     def read_config(self):
         line = self.read_line()
-        current_group = None
+        current_group = self.no_group
 
         while line is not None:
             entry_match = self.entry_regex.search(line)
 
             if entry_match is not None:
-                if current_group is None:
-                    raise Exception('Unexpected line in config: {}'.format(line))
-
-                self.config[current_group][entry_match.group(2)] = entry_match.group(4).strip()
+                current_group[entry_match.group(2)] = entry_match.group(4).strip()
 
                 line = self.read_line()
                 continue
@@ -39,10 +37,12 @@ class ConfigReader:
             group_header_match = self.group_header_regex.search(line)
 
             if group_header_match is not None:
-                current_group = group_header_match.group(1)
+                group_key = group_header_match.group(1)
 
-                if current_group not in self.config:
-                    self.config[current_group] = {}
+                if group_key not in self.config:
+                    self.config[group_key] = {}
+
+                current_group = self.config[group_key]
 
                 line = self.read_line()
                 continue
