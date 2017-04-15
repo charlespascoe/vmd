@@ -8,10 +8,22 @@ import sys
 from parser import Parser
 from config import Config
 import logging
+import os
+import re
 
 logging.basicConfig(level=logging.DEBUG)
 
-config = Config(['themes/default', '~/.vmdrc'])
+themes_directory = os.path.join(os.path.dirname(__file__), 'themes')
+
+theme = os.path.join(themes_directory, 'default')
+
+if 'VMD_THEME' in os.environ:
+    if re.search('^[a-zA-Z_\-0-9]+$', os.environ['VMD_THEME']):
+        theme = os.path.join(themes_directory, os.environ['VMD_THEME'])
+    else:
+        theme = os.environ['VMD_THEME']
+
+config = Config([theme, '~/.vmdrc'])
 
 config.load()
 
