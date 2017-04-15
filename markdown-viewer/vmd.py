@@ -19,7 +19,7 @@ p = Parser()
 
 doc = p.parse(sys.stdin.read())
 
-renderer = Renderer(DisplayWriter(sys.stdout, 30))
+renderer = Renderer(DisplayWriter(sys.stdout))
 renderer.formatters['Paragraph'] = default_formatters.ParagraphFormatter(config)
 renderer.formatters['Heading'] = default_formatters.HeadingFormatter(config)
 renderer.formatters['Strong'] = default_formatters.StrongFormatter(config)
