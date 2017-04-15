@@ -2,13 +2,17 @@ from markdown import markdown
 from elements import *
 from html.parser import HTMLParser
 import re
+import logging
 
 
 class Parser:
+    def __init__(self):
+        self.logger = logging.getLogger(self.__class__.__name__)
+
     def parse(self, md):
         builder = TreeBuilder()
         html = markdown(md)
-        print(html)
+        self.logger.debug('HTML:\n\n%s\n\nEND HTML', html)
         builder.feed(html)
         return builder.document
 
@@ -21,6 +25,8 @@ class TreeBuilder(HTMLParser):
         self.heading_regex = re.compile('^h(1|2|3|4|5|6)$')
 
         self.unknown_tag_stack = []
+
+        self.logger = logging.getLogger(self.__class__.__name__)
 
     def get_attr(self, attrs, find_key, default=None):
         for key, value in attrs:
@@ -36,7 +42,9 @@ class TreeBuilder(HTMLParser):
         heading_match = self.heading_regex.search(tag)
 
         if heading_match:
-            self.new_element(tag, Heading(int(heading_match.group(1))))
+            heading = Heading(int(heading_match.group(1)))
+            self.new_element(tag, heading)
+            self.document.add_heading(heading)
         elif tag == 'p':
             self.new_element(tag, Paragraph())
         elif tag == 'strong':
@@ -57,9 +65,9 @@ class TreeBuilder(HTMLParser):
             elif isinstance(self.current_element, List):
                 self.new_element(tag, ListItem())
             else:
-                raise Exception('Unexpected list item')
+                self.logger.warning('Unexpected list item found in %s', self.current_element.tag_ancestry())
         else:
-            #TODO: Logging!
+            self.logger.warn('Unhandled tag type \'%s\' found in %s', tag, self.current_element.tag_ancestry())
             self.unknown_tag_stack.append(tag)
 
 

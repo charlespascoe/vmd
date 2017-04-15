@@ -5,28 +5,42 @@ import utils
 
 
 class HeadingFormatter(Formatter):
-    def __init__(self):
-        self.style = CompositeStyle(
-            ClearStyle(),
-            BoldStyle(),
-            ForegroundColourStyle(208)
-        )
+    def __init__(self, config):
+        self.config = config
+        super().__init__()
 
     def format(self, renderer, elm, writer):
-        writer.prefix = ''.ljust((elm.level - 1) * 2)
+        indent = min(elm.level - 1, self.config.formatting.heading_indent_limit) * 2
+
+        writer.prefix = ''.ljust(indent + 1)
         writer.new_line()
 
+        writer.push_style(self.config.styles.heading_index[elm.level - 1])
+        writer.write_text(elm.index)
+        writer.pop_style()
+        writer.write_text(' ')
+        writer.push_style(self.config.styles.headings[elm.level - 1])
         super().format(renderer, elm, writer)
+        writer.pop_style()
 
-        writer.prefix = ''.ljust(elm.level * 2)
+        if self.config.formatting.align_content_with_headings:
+            writer.prefix = ''.ljust(indent + 3)
+        else:
+            writer.prefix = ' '
+
         writer.new_line()
 
 
 class ParagraphFormatter(Formatter):
+    def __init__(self, config):
+        self.style = config.styles.paragraph
+        self.indent = config.formatting.indent_paragraph_first_line
+
     def format(self, renderer, elm, writer):
         writer.new_line()
 
-        writer.write_text('  ')
+        if self.indent:
+            writer.write_text('  ')
 
         super().format(renderer, elm, writer)
 
@@ -34,24 +48,25 @@ class ParagraphFormatter(Formatter):
 
 
 class StrongFormatter(Formatter):
-    def __init__(self):
-        self.style = BoldStyle()
+    def __init__(self, config):
+        self.style = config.styles.strong
 
 
 class EmphasisFormatter(Formatter):
-    def __init__(self):
-        self.style = ItalicStyle()
+    def __init__(self, config):
+        self.style = config.styles.emphasis
 
 
 class InlineCodeFormatter(Formatter):
-    def __init__(self):
-        self.style = CompositeStyle(ClearStyle(), ForegroundColourStyle(196), BackgroundColourStyle(52))
+    def __init__(self, config):
+        self.style = config.styles.inline_code
 
 
 class AppendLinkFormatter(Formatter):
-    def __init__(self):
-        self.style = ForegroundColourStyle(82)
-        self.link_style = ForegroundColourStyle(240)
+    def __init__(self, config):
+        self.style = config.styles.link
+        self.link_index_style = config.styles.link_index
+        self.link_hint_style = config.styles.link_hint
 
     def format(self, renderer, elm, writer):
         super().format(renderer, elm, writer)
@@ -61,11 +76,11 @@ class AppendLinkFormatter(Formatter):
         if linkable is not None:
             link_index = utils.to_superscript(linkable.next_link_index())
 
-            writer.push_style(self.style)
+            writer.push_style(self.link_index_style)
             writer.write_text(link_index)
             writer.pop_style()
 
-            linkable.add_child(Text('\n', Text(self.link_style, link_index, ' ', elm.path)))
+            linkable.add_child(Text('\n', Text(self.link_hint_style, link_index, ' ', elm.path)))
 
 
 class ListFormatter(Formatter):
@@ -78,8 +93,8 @@ class ListFormatter(Formatter):
 
 
 class ListItemFormatter(Formatter):
-    def __init__(self):
-        self.bullet_style = ForegroundColourStyle(208)
+    def __init__(self, config):
+        self.bullet_style = config.styles.list_bullet
         super().__init__()
 
     def format(self, renderer, elm, writer):
@@ -99,6 +114,10 @@ class ListItemFormatter(Formatter):
 
 
 class OrderedListItemFormatter(ListItemFormatter):
+    def __init__(self, config):
+        super().__init__(config)
+        self.bullet_style = config.styles.list_number
+
     def format(self, renderer, elm, writer):
         max_index = elm.parent.prev_index
 

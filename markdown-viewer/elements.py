@@ -11,6 +11,7 @@ class Element:
 
         self.children = args
         self.parent = None
+        self.tag = '<Unknown>'
 
     def add_child(self, child):
         self.children.append(child)
@@ -23,6 +24,14 @@ class Element:
             return self.parent
 
         return self.parent.find_ancestor(element_type)
+
+    def tag_ancestry(self):
+        ancestor_tags = ''
+
+        if self.parent is not None:
+            ancestor_tags = self.parent.tag_ancestry() + ' > '
+
+        return ancestor_tags + self.tag
 
 
 class Text(Element):
@@ -55,7 +64,13 @@ class Heading(Text):
         if not isinstance(level, int) or level < 1 or level > 6:
             raise Exception('Invalid Heading level: {}'.format(level))
         self.level = level
+        self.prev_subheading_index = 0
+        self.index = '0'
         super().__init__(*args)
+
+    def next_subheading_index(self):
+        self.prev_subheading_index += 1
+        return '{}.{}'.format(self.index, self.prev_subheading_index)
 
 
 class InlineCode(Text):
@@ -114,4 +129,19 @@ class OrderedListItem(ListItem):
 
 
 class Document(Element):
-    pass
+    def __init__(self, *args):
+        super().__init__(*args)
+        self.headings = []
+        self.prev_heading_index = 0
+        self.tag = 'document'
+
+    def add_heading(self, new_heading):
+        for heading in reversed(self.headings):
+            if heading.level < new_heading.level:
+                new_heading.index = heading.next_subheading_index()
+                break
+        else:
+            self.prev_heading_index += 1
+            new_heading.index = str(self.prev_heading_index)
+
+        self.headings.append(new_heading)
