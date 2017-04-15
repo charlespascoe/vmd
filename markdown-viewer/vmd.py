@@ -7,6 +7,9 @@ import default_formatters
 import sys
 from parser import Parser
 from config import Config
+import logging
+
+logging.basicConfig(level=logging.DEBUG)
 
 config = Config(['defaults', '~/.vmdrc'])
 
