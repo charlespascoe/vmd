@@ -11,7 +11,7 @@ import logging
 
 logging.basicConfig(level=logging.DEBUG)
 
-config = Config(['defaults', '~/.vmdrc'])
+config = Config(['themes/default', '~/.vmdrc'])
 
 config.load()
 
