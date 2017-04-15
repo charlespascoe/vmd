@@ -72,7 +72,7 @@ class CodeBlockFormatter(Formatter):
 
         lines = elm.lines()
 
-        line_pos_width = len(str(len(lines)))
+        line_pos_width = max(len(str(len(lines))), 2)
 
         for line_pos, line in enumerate(elm.lines()):
             writer.new_line()
