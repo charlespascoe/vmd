@@ -20,6 +20,8 @@ class Config:
         self.logger = logging.getLogger(self.__class__.__name__)
 
     def load(self):
+        config = {}
+
         for path in self.paths:
             path = os.path.abspath(os.path.expanduser(path))
 
@@ -27,18 +29,19 @@ class Config:
 
             try:
                 with open(path) as f:
-                    reader = ConfigReader(f, self.config)
-                    self.config = reader.read_config()
+                    reader = ConfigReader(f, config)
+                    config = reader.read_config()
             except FileNotFoundError:
                 self.logger.info('Config file not found: %s', path)
 
         for key, config_class in self.config_classes.items():
-            if key in self.config:
+            if key in config:
                 self.logger.debug('Loading config for %s', key)
-                self.config[key] = config_class(self.config[key])
+                self.config[key] = config_class(config[key])
             else:
                 self.logger.debug('Loading default config for %s', key)
                 self.config[key] = config_class()
+
 
     def __getattr__(self, name):
         return self.config[name]

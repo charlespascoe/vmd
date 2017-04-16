@@ -11,15 +11,21 @@ class ConfigReader:
         self.no_group = {}
 
     def read_line(self):
-        line = self.conf_file.readline()
-
-        while line == '\n':
+        while True:
             line = self.conf_file.readline()
+
+            if line != '\n':
+                break
 
         if line == '':
             return None
 
-        return self.comment_regex.search(line).group(1).strip()
+        line = self.comment_regex.search(line).group(1).strip()
+
+        if line == '':
+            return self.read_line()
+
+        return line
 
     def read_config(self):
         line = self.read_line()
@@ -47,7 +53,7 @@ class ConfigReader:
                 line = self.read_line()
                 continue
 
-            raise Exception('Unparsable line in config: {}'.format(line))
+            raise Exception('Unparsable line in config: "{}"'.format(line))
 
         return self.config
 
