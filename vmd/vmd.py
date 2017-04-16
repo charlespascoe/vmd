@@ -1,4 +1,5 @@
 #!/usr/bin/env python3
+# PYTHON_ARGCOMPLETE_OK
 from styles import *
 from elements import *
 from writer import *
@@ -58,6 +59,12 @@ def main():
     input_group.add_argument('--stdin', dest='stdin', action='store_true', help='Read Markdown from stdin')
 
     parser.add_argument('-t', '--tab-spaces', dest='tab_spaces', default=4, type=int, help='Number of spaces in a tab (defaults to 4)')
+
+    try:
+        import argcomplete
+        argcomplete.autocomplete(parser)
+    except Exception:
+        pass # Optional argcomplete module not installed
 
     args = parser.parse_args()
 
