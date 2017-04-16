@@ -1,38 +1,26 @@
 #!/usr/bin/env python3
 # PYTHON_ARGCOMPLETE_OK
-from styles import *
-from elements import *
-from writer import *
-from renderer import Renderer
-import default_formatters
 import sys
-from parser import Parser
-from config import Config
-import logging
-import os
-import re
 import argparse
 
 
-def build_render(writer, config):
-    renderer = Renderer(writer)
-    renderer.formatters['Paragraph'] = default_formatters.ParagraphFormatter(config)
-    renderer.formatters['Heading'] = default_formatters.HeadingFormatter(config)
-    renderer.formatters['Strong'] = default_formatters.StrongFormatter(config)
-    renderer.formatters['Emphasis'] = default_formatters.EmphasisFormatter(config)
-    renderer.formatters['InlineCode'] = default_formatters.InlineCodeFormatter(config)
-    renderer.formatters['Link'] = default_formatters.AppendLinkFormatter(config)
-    renderer.formatters['List'] = default_formatters.ListFormatter()
-    renderer.formatters['ListItem'] = default_formatters.ListItemFormatter(config)
-    renderer.formatters['OrderedList'] = 'List'
-    renderer.formatters['OrderedListItem'] = default_formatters.OrderedListItemFormatter(config)
-    renderer.formatters['HorizontalRule'] = default_formatters.HorizontalRuleFormatter(config)
-    renderer.formatters['CodeBlock'] = default_formatters.CodeBlockFormatter(config)
+def build_parser(args):
+    from parser import Parser
 
-    return renderer
+    return Parser(args.tab_spaces)
+
+
+def create_display_writer(output):
+    from writer import DisplayWriter
+
+    return DisplayWriter(output)
 
 
 def load_config():
+    from config import Config
+    import re
+    import os
+
     themes_directory = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), 'themes')
 
     theme = os.path.join(themes_directory, 'default')
@@ -48,6 +36,27 @@ def load_config():
     config.load()
 
     return config
+
+
+def build_render(writer, config):
+    from renderer import Renderer
+    import default_formatters
+
+    renderer = Renderer(writer)
+    renderer.formatters['Paragraph'] = default_formatters.ParagraphFormatter(config)
+    renderer.formatters['Heading'] = default_formatters.HeadingFormatter(config)
+    renderer.formatters['Strong'] = default_formatters.StrongFormatter(config)
+    renderer.formatters['Emphasis'] = default_formatters.EmphasisFormatter(config)
+    renderer.formatters['InlineCode'] = default_formatters.InlineCodeFormatter(config)
+    renderer.formatters['Link'] = default_formatters.AppendLinkFormatter(config)
+    renderer.formatters['List'] = default_formatters.ListFormatter()
+    renderer.formatters['ListItem'] = default_formatters.ListItemFormatter(config)
+    renderer.formatters['OrderedList'] = 'List'
+    renderer.formatters['OrderedListItem'] = default_formatters.OrderedListItemFormatter(config)
+    renderer.formatters['HorizontalRule'] = default_formatters.HorizontalRuleFormatter(config)
+    renderer.formatters['CodeBlock'] = default_formatters.CodeBlockFormatter(config)
+
+    return renderer
 
 
 def main():
@@ -68,16 +77,18 @@ def main():
 
     args = parser.parse_args()
 
+    import logging
+
     if args.verbosity != 0:
         logging_level = 10 * max(0, 3 - args.verbosity)
 
         logging.basicConfig(level=logging_level)
 
-    mdparser = Parser(args.tab_spaces)
+    mdparser = build_parser(args)
 
     config = load_config()
 
-    writer = DisplayWriter(sys.stdout)
+    writer = create_display_writer(sys.stdout)
 
     renderer = build_render(writer, config)
 
