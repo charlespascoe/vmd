@@ -1,4 +1,5 @@
 from markdown import markdown
+from markdown.extensions.fenced_code import FencedCodeExtension
 from elements import *
 from html.parser import HTMLParser
 import re
@@ -6,12 +7,17 @@ import logging
 
 
 class Parser:
-    def __init__(self):
+    def __init__(self, tab_spaces):
         self.logger = logging.getLogger(self.__class__.__name__)
+        self.tab_spaces = tab_spaces
 
     def parse(self, md):
         builder = TreeBuilder()
-        html = markdown(md)
+        html = markdown(
+            md,
+            tab_length=self.tab_spaces,
+            extensions=[FencedCodeExtension()]
+        )
         self.logger.debug('HTML:\n\n%s\n\nEND HTML', html)
         builder.feed(html)
         return builder.document

@@ -57,6 +57,8 @@ def main():
     input_group.add_argument('file', nargs='?', metavar='FILE', help='The path to the markdown file')
     input_group.add_argument('--stdin', dest='stdin', action='store_true', help='Read Markdown from stdin')
 
+    parser.add_argument('-t', '--tab-spaces', dest='tab_spaces', default=4, type=int, help='Number of spaces in a tab (defaults to 4)')
+
     args = parser.parse_args()
 
     if args.verbosity != 0:
@@ -64,7 +66,7 @@ def main():
 
         logging.basicConfig(level=logging_level)
 
-    mdparser = Parser()
+    mdparser = Parser(args.tab_spaces)
 
     config = load_config()
 
