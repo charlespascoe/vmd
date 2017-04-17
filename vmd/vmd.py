@@ -55,6 +55,7 @@ def build_render(writer, config):
     renderer.formatters['OrderedListItem'] = default_formatters.OrderedListItemFormatter(config)
     renderer.formatters['HorizontalRule'] = default_formatters.HorizontalRuleFormatter(config)
     renderer.formatters['CodeBlock'] = default_formatters.CodeBlockFormatter(config)
+    renderer.formatters['Blockquote'] = default_formatters.BlockquoteFormatter(config)
 
     return renderer
 

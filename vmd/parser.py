@@ -53,7 +53,8 @@ class TreeBuilder(HTMLParser):
             self.new_element(tag, heading)
             self.document.add_heading(heading)
         elif tag == 'p':
-            self.new_element(tag, Paragraph())
+            if not isinstance(self.current_element, Blockquote):
+                self.new_element(tag, Paragraph())
         elif tag == 'strong':
             self.new_element(tag, Strong())
         elif tag == 'em':
@@ -78,8 +79,10 @@ class TreeBuilder(HTMLParser):
                 self.logger.warning('Unexpected list item found in %s', self.current_element.tag_ancestry())
         elif tag == 'hr':
             self.current_element.add_child(HorizontalRule())
+        elif tag == 'blockquote':
+            self.new_element(tag, Blockquote())
         else:
-            self.logger.warn('Unhandled tag type \'%s\' found in %s', tag, self.current_element.tag_ancestry())
+            self.logger.warning('Unhandled tag type \'%s\' found in %s', tag, self.current_element.tag_ancestry())
             self.unknown_tag_stack.append(tag)
 
 

@@ -107,6 +107,10 @@ class List(Element):
         super().add_child(child)
 
 
+class Blockquote(Text):
+    pass
+
+
 class ListItem(Linkable):
     def get_depth(self):
         return self.parent.get_depth()

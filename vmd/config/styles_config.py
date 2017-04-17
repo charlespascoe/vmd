@@ -38,6 +38,8 @@ class StylesConfig:
         self.paragraph = self.parse_style(config, 'paragraph')
         self.horizonal_rule = self.parse_style(config, 'horizonal_rule')
         self.code_block_margin = self.parse_style(config, 'code_block_margin')
+        self.blockquote = self.parse_style(config, 'blockquote')
+        self.blockquote_margin = self.parse_style(config, 'blockquote_margin')
 
         for key in config:
             raise Exception('Unknown setting in styles section: {}'.format(key))

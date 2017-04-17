@@ -147,6 +147,7 @@ class OrderedListItemFormatter(ListItemFormatter):
 
         self.format_list_item(renderer, elm, writer, ' {}. '.format(index))
 
+
 class HorizontalRuleFormatter(Formatter):
     def __init__(self, config):
         self.style = config.styles.horizonal_rule
@@ -159,6 +160,31 @@ class HorizontalRuleFormatter(Formatter):
         writer.push_style(self.style)
         writer.write_text(' ' + ''.ljust(writer.columns - 2, '━') + ' ')
         writer.pop_style()
+
+        writer.prefix = prev_prefix
+        writer.new_line()
+
+
+class BlockquoteFormatter(Formatter):
+    def __init__(self, config):
+        super().__init__()
+        self.style = config.styles.blockquote
+        self.margin_style = config.styles.blockquote_margin
+        self.use_quotes = config.formatting.blockquote_quote_marks
+
+    def format(self, renderer, elm, writer):
+        prev_prefix = writer.prefix
+
+        writer.prefix = Text(prev_prefix, Text(self.margin_style, '┃ '))
+        writer.new_line()
+
+        if self.use_quotes:
+            writer.write_text(Text(self.style, '"'))
+
+        super().format(renderer, elm, writer)
+
+        if self.use_quotes:
+            writer.write_text(Text(self.style, '"'))
 
         writer.prefix = prev_prefix
         writer.new_line()
