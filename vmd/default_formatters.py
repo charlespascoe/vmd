@@ -120,7 +120,7 @@ class ListItemFormatter(Formatter):
         super().__init__()
 
     def format(self, renderer, elm, writer):
-        self.format_list_item(renderer, elm, writer, ' • ')
+        self.format_list_item(renderer, elm, writer, '  • ')
 
     def format_list_item(self, renderer, elm, writer, bullet):
         prev_prefix = writer.prefix
@@ -143,7 +143,7 @@ class OrderedListItemFormatter(ListItemFormatter):
     def format(self, renderer, elm, writer):
         max_index = elm.parent.prev_index
 
-        index = str(elm.index).rjust(len(str(max_index)))
+        index = str(elm.index).rjust(max(len(str(max_index)), 2))
 
         self.format_list_item(renderer, elm, writer, ' {}. '.format(index))
 
