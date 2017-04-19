@@ -4,6 +4,9 @@ import sys
 import argparse
 
 
+VERSION = '0.0.0'
+
+
 def build_parser(args):
     from parser import Parser
 
@@ -63,6 +66,7 @@ def build_render(writer, config):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('-v', '--verbose', action='count', default=0, dest='verbosity')
+    parser.add_argument('-V', '--version', action='store_true', dest='version', help='Show version and exit')
 
     input_group = parser.add_mutually_exclusive_group()
     input_group.add_argument('file', nargs='?', metavar='FILE', help='The path to the markdown file')
@@ -77,6 +81,10 @@ def main():
         pass # Optional argcomplete module not installed
 
     args = parser.parse_args()
+
+    if args.version:
+        print('vmd {}'.format(VERSION))
+        sys.exit(0)
 
     import logging
 
