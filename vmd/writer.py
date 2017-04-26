@@ -1,9 +1,9 @@
 import sys
 import shutil
-from styles import ClearStyle
-from elements import Text
+from vmd.styles import ClearStyle
+from vmd.elements import Text
 import re
-import utils
+import vmd.utils as utils
 
 
 class TextStyleWriter:

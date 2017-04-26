@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 # PYTHON_ARGCOMPLETE_OK
 import sys
 import argparse
@@ -8,19 +7,19 @@ VERSION = '0.0.0'
 
 
 def build_parser(args):
-    from parser import Parser
+    from vmd.parser import Parser
 
     return Parser(args.tab_spaces)
 
 
 def create_display_writer(output):
-    from writer import DisplayWriter
+    from vmd.writer import DisplayWriter
 
     return DisplayWriter(output)
 
 
 def load_config():
-    from config import Config
+    from vmd.config import Config
     import re
     import os
 
@@ -42,23 +41,23 @@ def load_config():
 
 
 def build_render(writer, config):
-    from renderer import Renderer
-    import default_formatters
+    from vmd.renderer import Renderer
+    import vmd.default_formatters
 
     renderer = Renderer(writer)
-    renderer.formatters['Paragraph'] = default_formatters.ParagraphFormatter(config)
-    renderer.formatters['Heading'] = default_formatters.HeadingFormatter(config)
-    renderer.formatters['Strong'] = default_formatters.StrongFormatter(config)
-    renderer.formatters['Emphasis'] = default_formatters.EmphasisFormatter(config)
-    renderer.formatters['InlineCode'] = default_formatters.InlineCodeFormatter(config)
-    renderer.formatters['Link'] = default_formatters.AppendLinkFormatter(config)
-    renderer.formatters['List'] = default_formatters.ListFormatter()
-    renderer.formatters['ListItem'] = default_formatters.ListItemFormatter(config)
+    renderer.formatters['Paragraph'] = vmd.default_formatters.ParagraphFormatter(config)
+    renderer.formatters['Heading'] = vmd.default_formatters.HeadingFormatter(config)
+    renderer.formatters['Strong'] = vmd.default_formatters.StrongFormatter(config)
+    renderer.formatters['Emphasis'] = vmd.default_formatters.EmphasisFormatter(config)
+    renderer.formatters['InlineCode'] = vmd.default_formatters.InlineCodeFormatter(config)
+    renderer.formatters['Link'] = vmd.default_formatters.AppendLinkFormatter(config)
+    renderer.formatters['List'] = vmd.default_formatters.ListFormatter()
+    renderer.formatters['ListItem'] = vmd.default_formatters.ListItemFormatter(config)
     renderer.formatters['OrderedList'] = 'List'
-    renderer.formatters['OrderedListItem'] = default_formatters.OrderedListItemFormatter(config)
-    renderer.formatters['HorizontalRule'] = default_formatters.HorizontalRuleFormatter(config)
-    renderer.formatters['CodeBlock'] = default_formatters.CodeBlockFormatter(config)
-    renderer.formatters['Blockquote'] = default_formatters.BlockquoteFormatter(config)
+    renderer.formatters['OrderedListItem'] = vmd.default_formatters.OrderedListItemFormatter(config)
+    renderer.formatters['HorizontalRule'] = vmd.default_formatters.HorizontalRuleFormatter(config)
+    renderer.formatters['CodeBlock'] = vmd.default_formatters.CodeBlockFormatter(config)
+    renderer.formatters['Blockquote'] = vmd.default_formatters.BlockquoteFormatter(config)
 
     return renderer
 

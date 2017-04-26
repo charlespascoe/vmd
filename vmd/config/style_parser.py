@@ -1,5 +1,5 @@
 import re
-from styles import *
+from vmd.styles import *
 
 
 class StyleParser:

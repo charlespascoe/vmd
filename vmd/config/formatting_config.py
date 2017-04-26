@@ -1,4 +1,4 @@
-from config import config_reader
+from vmd.config import config_reader
 
 class FormattingConfig:
     def __init__(self, config={}):

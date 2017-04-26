@@ -1,4 +1,4 @@
-from styles import Style
+from vmd.styles import Style
 
 class Element:
     def __init__(self, *args):

@@ -1,5 +1,5 @@
-from styles import NoOpStyle, CompositeStyle
-from config.style_parser import StyleParser
+from vmd.styles import NoOpStyle, CompositeStyle
+from vmd.config.style_parser import StyleParser
 
 
 class StylesConfig:
