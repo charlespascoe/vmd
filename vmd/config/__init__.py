@@ -1,9 +1,9 @@
 import re
 import os
-from styles import *
-from config.config_reader import ConfigReader
-from config.styles_config import StylesConfig
-from config.formatting_config import FormattingConfig
+from vmd.styles import *
+from vmd.config.config_reader import ConfigReader
+from vmd.config.styles_config import StylesConfig
+from vmd.config.formatting_config import FormattingConfig
 import logging
 
 

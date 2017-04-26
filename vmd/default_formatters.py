@@ -1,7 +1,7 @@
-from styles import *
-from formatter import Formatter
-from elements import *
-import utils
+from vmd.styles import *
+from vmd.formatter import Formatter
+from vmd.elements import *
+import vmd.utils as utils
 
 
 class HeadingFormatter(Formatter):

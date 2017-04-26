@@ -1,4 +1,4 @@
-from elements import Text
+from vmd.elements import Text
 
 def get_printable_length(text):
     if isinstance(text, str):

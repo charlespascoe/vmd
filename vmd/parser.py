@@ -1,6 +1,6 @@
 from markdown import markdown
 from markdown.extensions.fenced_code import FencedCodeExtension
-from elements import *
+from vmd.elements import *
 from html.parser import HTMLParser
 import re
 import logging
