@@ -23,7 +23,7 @@ def load_config():
     import re
     import os
 
-    themes_directory = os.path.join(os.path.dirname(os.path.realpath(sys.argv[0])), 'themes')
+    themes_directory = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'themes')
 
     theme = os.path.join(themes_directory, 'default')
 
