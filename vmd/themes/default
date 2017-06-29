@@ -1,0 +1,24 @@
+[styles]
+    heading_base = clear,bold,fgcolour(208)
+    heading_index_base = fgcolour(160)
+    heading3 = faint
+    heading4 = faint
+    heading5 = faint
+    heading6 = faint
+    strong = bold
+    emphasis = italic
+    inline_code = clear,fgcolour(196),bgcolour(52)
+    link = underline,fgcolour(82)
+    link_index = fgcolour(82)
+    link_hint = fgcolour(240)
+    list_bullet = fgcolour(64)
+    horizonal_rule = fgcolour(240)
+    code_block_margin = fgcolour(240)
+    blockquote = italic
+    blockquote_margin = fgcolour(240)
+
+[formatting]
+    indent_paragraph_first_line = true
+    heading_indent_limit = 6
+    align_content_with_headings = true
+    blockquote_quote_marks = true
