@@ -5,10 +5,10 @@ setup(
     package_data = {
         'vmd': ['themes/*']
     },
-    version = '0.0.5',
-    description = 'Terminal markdown render',
+    version = '0.1.0',
+    description = 'Terminal Markdown Renderer',
     author = 'Charles Pascoe',
-    url='https://github.com/cpascoe95/stretch-pass',
+    url='https://github.com/cpascoe95/vmd',
     author_email = 'charles@cpascoe.co.uk',
     keywords = ['terminal', 'markdown', 'viewer', 'md'],
     classifiers = [ # https://pypi.python.org/pypi?%3Aaction=list_classifiers
