@@ -1,6 +1,10 @@
 # Terminal Markdown Viewer #
 
-Render markdown in a terminal! Why? Because although Markdown is still readable as-is, if you use Markdown a lot, it's nice to have something to render it as you'd see as as HTML - with **bold text** and *emphasis*, even links.
+Render markdown in a terminal! Why? Because although Markdown is still readable as-is, if you use Markdown a lot, it's nice to have something to render it with the proper formatting - with **bold text** and *emphasis*, etc.
+
+An example:
+
+![A screenshot displaying an example Markdown document, rendered using vmd](https://github.com/cpascoe95/vmd/blob/master/example.png)
 
 ## Installation ##
 
