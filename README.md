@@ -4,7 +4,7 @@ Render markdown in a terminal! Why? Because although Markdown is still readable 
 
 An example:
 
-![A screenshot displaying an example Markdown document, rendered using vmd][https://github.com/cpascoe95/vmd/blob/master/example.png]
+![A screenshot displaying an example Markdown document, rendered using vmd](https://github.com/cpascoe95/vmd/blob/master/example.png)
 
 ## Installation ##
 
