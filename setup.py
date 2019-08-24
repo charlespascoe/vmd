@@ -22,7 +22,7 @@ setup(
         'Topic :: Utilities'
     ],
     install_requires = [
-        'Markdown==2.6.8'
+        'Markdown>=2.6.8, <3'
     ],
     entry_points={
         'console_scripts': [
