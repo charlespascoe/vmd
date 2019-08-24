@@ -81,6 +81,8 @@ class TreeBuilder(HTMLParser):
             self.current_element.add_child(HorizontalRule())
         elif tag == 'blockquote':
             self.new_element(tag, Blockquote())
+        elif tag == 'img':
+            pass
         else:
             self.logger.warning('Unhandled tag type \'%s\' found in %s', tag, self.current_element.tag_ancestry())
             self.unknown_tag_stack.append(tag)
