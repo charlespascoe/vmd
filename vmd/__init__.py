@@ -103,8 +103,13 @@ def main():
     if args.stdin:
         doc = mdparser.parse(sys.stdin.read())
     elif args.file is not None:
-        with open(args.file) as f:
-            doc = mdparser.parse(f.read())
+        try:
+            with open(args.file, encoding='utf-8') as f:
+                doc = mdparser.parse(f.read())
+        except (OSError, ValueError) as exc:
+            print('vmd: cannot read file {}: {}'.format(args.file, exc),
+                  file=sys.stderr)
+            sys.exit(1)
     else:
         parser.print_help()
         sys.exit(1)
